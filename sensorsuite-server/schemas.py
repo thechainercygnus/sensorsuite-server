@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 class SensorReadingBase(BaseModel):
     sensor_id: str
-    timestamp: int
 
 
 class TemperatureReading(SensorReadingBase):
