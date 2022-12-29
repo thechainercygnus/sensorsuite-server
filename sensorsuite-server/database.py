@@ -12,6 +12,6 @@ def parse_db_url(db_url: str) -> str:
     return uri
 
 
-engine = create_engine(parse_db_url(get_settings().db_url))
+engine = create_engine(f"{parse_db_url(get_settings().db_url)}?check_same_thread=False")
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
