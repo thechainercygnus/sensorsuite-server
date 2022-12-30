@@ -49,16 +49,13 @@ async def create_temperature_record(temp_reading: schemas.TemperatureReading, db
     crud.create_temp_record(db=db, temp_reading=temp_reading)
     return 200
 
-@v1.get("/temperature/", tags=["sensor reading"])
+@v1.get("/temperature/", tags=["sensor reading"], response_model=list[schemas.TemperatureReading])
 async def get_temperature_records(start_time: str, request: Request, db: Session = Depends(get_db), sensor_id: str | None = None):
     try:
         start_dtm = datetime.strptime(start_time, "%Y%m%dT%H%M%S")
     except:
         raise_not_found(request)
-    temperature_range = db.query(models.Temperature.created_at >= start_dtm)
-    if temperature_range:
-        return temperature_range
-    else:
-        raise_not_found(request)
+    temperature_range = crud.get_temp_records(db=db, start_time=start_dtm, sensor_id=sensor_id)
+    return temperature_range
 
 app.mount("/v1", v1)
